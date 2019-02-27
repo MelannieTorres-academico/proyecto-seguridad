@@ -1,3 +1,5 @@
+print("Hola")
+
 def inc(x):
     return x + 1
 
