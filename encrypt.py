@@ -1,11 +1,10 @@
-from Crypto.Cipher import ARC4
-from Crypto.Hash import SHA
-from Crypto.Random import get_random_bytes
 from time import time
 
 # RC4
 # https://pycryptodome.readthedocs.io/en/latest/src/cipher/arc4.html
-
+from Crypto.Cipher import ARC4
+from Crypto.Hash import SHA
+from Crypto.Random import get_random_bytes
 def arc4(key, message):
     nonce = get_random_bytes(16)
     tempkey = SHA.new(key+nonce).digest()
@@ -28,6 +27,7 @@ def des(key, plaintext):
 
 
 #aes
+#/AESCTR.pdf
 #https://www.dlitz.net/software/pycrypto/api/current/Crypto.Cipher.AES-module.html
 from Crypto.Cipher import AES
 from Crypto import Random
@@ -39,13 +39,13 @@ def aes(key, plaintext):
 
 #RSA-­OAEP
 # https://pycryptodome.readthedocs.io/en/latest/src/cipher/oaep.html
-# from Crypto.Cipher import PKCS1_OAEP
-# from Crypto.PublicKey import RSA
-# def rsa_oaep():
-# message = b'You can attack now!'
-# key = RSA.importKey(open('public.pem').read())
-# cipher = PKCS1_OAEP.new(key)
-# ciphertext = cipher.encrypt(message)
+from Crypto.Cipher import PKCS1_OAEP
+from Crypto.PublicKey import RSA
+
+def rsa_oaep(key, message):
+    cipher = PKCS1_OAEP.new(key)
+    ciphertext = cipher.encrypt(message)
+    return ciphertext
 
 def main():
     # RC4
@@ -79,6 +79,12 @@ def main():
         test_aes(key_test_aes[i])
 
 
+    print('RSA-OAEP test')
+    test_rsa_oaep()
+
+
+
+
 def test_arc4(key_string):
     key = bytearray.fromhex(key_string)
     start_time = time()
@@ -103,6 +109,16 @@ def test_aes(key_string):
     for i in range(1000):
         result = aes(key, b'6bc1bee22e409f96e93d7e117393172a')
     elapsed_time = (time() - start_time)/1000
+    print("Elapsed time: %.10f seconds." % elapsed_time)
+
+def test_rsa_oaep():
+    start_time = time()
+    message = b'You can attack now!'
+    key = RSA.importKey(open('public_key.pem').read())
+    for i in range(1000):
+        result = rsa_oaep(key, message)
+    elapsed_time = (time() - start_time)/1000
+    print("Public key size: 1024 bits")
     print("Elapsed time: %.10f seconds." % elapsed_time)
 
 if __name__ == "__main__":
