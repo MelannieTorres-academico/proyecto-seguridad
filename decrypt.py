@@ -36,6 +36,21 @@ def aes(key, plaintext):
     msg = iv + cipher.decrypt(plaintext)
     return msg
 
+#RSA-­OAEP
+# https://pycryptodome.readthedocs.io/en/latest/src/cipher/oaep.html
+from Crypto.Cipher import PKCS1_OAEP
+from Crypto.PublicKey import RSA
+
+def rsa_oaep(key, message):
+    cipher = PKCS1_OAEP.new(key)
+    ciphertext = cipher.encrypt(message)
+    return ciphertext
+
+def rsa_oaep_dec(key, message):
+    cipher = PKCS1_OAEP.new(key)
+    plaintext = cipher.decrypt(message)
+    return plaintext
+
 def main():
     keys_tests = ['01 02 03 04 05', '01 02 03 04 05 06 07',
     '01 02 03 04 05 06 07 08', '01 02 03 04 05 06 07 08 09 0a',
@@ -66,6 +81,9 @@ def main():
         print('Key size: ', key_sizes_aes[i],' bits', end=' ')
         test_aes(key_test_aes[i])
 
+    print('RSA-OAEP test')
+    test_rsa_oaep()
+
 def test_arc4(key_string):
     key = bytearray.fromhex(key_string)
     start_time = time()
@@ -89,6 +107,19 @@ def test_aes(key_string):
         result = aes(key, b'874d6191b620e3261bef6864990db6ce')
     elapsed_time = (time() - start_time)/1000
     print("Elapsed time: %.10f seconds." % elapsed_time)
+
+def test_rsa_oaep():
+    start_time = time()
+    message = b'You can attack now!'
+    public_key = RSA.importKey(open('private_key.pem').read())
+    private_key = RSA.importKey(open('private_key.pem').read())
+    rsa_oaep(public_key, message)
+    for i in range(1000):
+        result = rsa_oaep_dec(private_key, message)
+    elapsed_time = (time() - start_time)/1000
+    print("Key size: 1024 bits", end=' ')
+    print("Elapsed time: %.10f seconds." % elapsed_time)
+    print(result)
 
 if __name__ == "__main__":
     main()
