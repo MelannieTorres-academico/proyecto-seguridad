@@ -28,14 +28,24 @@ def des(key, plaintext):
 
 
 #aes
+#https://www.dlitz.net/software/pycrypto/api/current/Crypto.Cipher.AES-module.html
 from Crypto.Cipher import AES
 from Crypto import Random
-def aes():
-    key = bytes.fromhex('60 3d eb 10 15 ca 71 be 2b 73 ae f0 85 7d 77 81 1f 35 2c 07 3b 61 08 d7 2d 98 10 a3 09 14 df f4')
+def aes(key, plaintext):
     iv = Random.new().read(AES.block_size)
     cipher = AES.new(key, AES.MODE_CFB, iv)
-    msg = iv + cipher.encrypt(b'6bc1bee22e409f96e93d7e117393172a')
+    msg = iv + cipher.encrypt(plaintext)
     return msg
+
+#RSA-­OAEP
+# https://pycryptodome.readthedocs.io/en/latest/src/cipher/oaep.html
+# from Crypto.Cipher import PKCS1_OAEP
+# from Crypto.PublicKey import RSA
+# def rsa_oaep():
+# message = b'You can attack now!'
+# key = RSA.importKey(open('public.pem').read())
+# cipher = PKCS1_OAEP.new(key)
+# ciphertext = cipher.encrypt(message)
 
 def main():
     # RC4
@@ -91,7 +101,7 @@ def test_aes(key_string):
     key = bytes.fromhex(key_string)
     start_time = time()
     for i in range(1000):
-        result = arc4(key,  b'0')
+        result = aes(key, b'6bc1bee22e409f96e93d7e117393172a')
     elapsed_time = (time() - start_time)/1000
     print("Elapsed time: %.10f seconds." % elapsed_time)
 
