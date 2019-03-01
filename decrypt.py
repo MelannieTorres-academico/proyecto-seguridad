@@ -44,6 +44,11 @@ from Crypto.Cipher import PKCS1_OAEP
 from Crypto.PublicKey import RSA
 def rsa_oaep(key, message):
     cipher = PKCS1_OAEP.new(key)
+    ciphertext = cipher.encrypt(message)
+    return ciphertext
+
+def rsa_oaep_dec(key, message):
+    cipher = PKCS1_OAEP.new(key)
     plaintext = cipher.decrypt(message)
     return plaintext
 
@@ -126,12 +131,14 @@ def test_rsa_oaep(message):
     start_time = time()
     message = bytes.fromhex(message)
     private, key = generateKey(1024)
-    key = RSA.importKey(private)
+    key = RSA.importKey(key)
+    enc = rsa_oaep(key, message)
     for i in range(repetitions):
-        result = rsa_oaep(key, message)
+        result = rsa_oaep_dec(private, enc)
     elapsed_time = (time() - start_time)/repetitions
     print("Key size: 1024 bits", end=' ')
     print("Elapsed time: %.10f seconds." % elapsed_time)
+
 
 if __name__ == "__main__":
     main()
