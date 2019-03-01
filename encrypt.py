@@ -118,7 +118,7 @@ def test_rsa_oaep():
     for i in range(1000):
         result = rsa_oaep(key, message)
     elapsed_time = (time() - start_time)/1000
-    print("Public key size: 1024 bits")
+    print("Key size: 1024 bits", end=' ')
     print("Elapsed time: %.10f seconds." % elapsed_time)
 
 if __name__ == "__main__":
