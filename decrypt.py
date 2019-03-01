@@ -27,6 +27,14 @@ def des(key, plaintext):
 
 
 #aes
+#https://www.dlitz.net/software/pycrypto/api/current/Crypto.Cipher.AES-module.html
+from Crypto.Cipher import AES
+from Crypto import Random
+def aes(key, plaintext):
+    iv = Random.new().read(AES.block_size)
+    cipher = AES.new(key, AES.MODE_CFB, iv)
+    msg = iv + cipher.decrypt(plaintext)
+    return msg
 
 def main():
     keys_tests = ['01 02 03 04 05', '01 02 03 04 05 06 07',
@@ -46,6 +54,17 @@ def main():
     print('DES tests')
     test_des(b'8000000000000000')
 
+    # AES
+    key_test_aes = ['2b 7e 15 16 28 ae d2 a6 ab f7 15 88 09 cf 4f 3c',
+    '8e 73 b0 f7 da 0e 64 52 c8 10 f3 2b 80 90 79 e5 62 f8 ea d2 52 2c 6b 7b',
+    '60 3d eb 10 15 ca 71 be 2b 73 ae f0 85 7d 77 81 1f 35 2c 07 3b 61 08 d7 2d 98 10 a3 09 14 df f4'
+    ]
+    key_sizes_aes = [128, 192, 256]
+
+    print('AES test')
+    for i in range (len(key_test_aes)):
+        print('Key size: ', key_sizes_aes[i],' bits', end=' ')
+        test_aes(key_test_aes[i])
 
 def test_arc4(key_string):
     key = bytearray.fromhex(key_string)
@@ -61,6 +80,14 @@ def test_des(key):
         result = arc4(key,  b'95A8D72813DAA94D')
     elapsed_time = (time() - start_time)/1000
     print('Key size: 64 bits', end=' ')
+    print("Elapsed time: %.10f seconds." % elapsed_time)
+
+def test_aes(key_string):
+    key = bytes.fromhex(key_string)
+    start_time = time()
+    for i in range(1000):
+        result = aes(key, b'874d6191b620e3261bef6864990db6ce')
+    elapsed_time = (time() - start_time)/1000
     print("Elapsed time: %.10f seconds." % elapsed_time)
 
 if __name__ == "__main__":
