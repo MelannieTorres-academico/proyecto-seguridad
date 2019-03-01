@@ -11,15 +11,7 @@
 
 
 from Crypto.Hash import SHA256
-
-# Gets the hexadecimal given an array of bytes
-# params: array A
-# return: hexadecimal string
-def toHex(A):
-    newA = []
-    for i in range(len(A)):
-        newA.append('{:02x}'.format(A[i]))
-    return ''.join(newA).upper()
+from time import time
 
 # calculates the hash
 # params string message
@@ -28,18 +20,23 @@ def _hash(string):
     hash = SHA256.new()
     hash.update(string.encode('utf-8'))
     result = hash.digest()
-    return toHex(result)
+    return result
 
 
 # Section will all tests (in this example I only added one, but you should add all)
 def test_1_hash():
-    assert _hash('') == 'E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855'
-
+    #ciclo de 1000
+    #start time
+    start_time = time()
+    for i in range(1000):
+        _hash("message")
+    #end time
+    elapsed_time = (time() - start_time)/1000
+    print("Elapsed time: %.10f seconds." % elapsed_time)
 
 
 def main():
-    result = _hash("message")
-    print(toHex(result))
+    test_1_hash()
 
 if __name__ == "__main__":
     main()
