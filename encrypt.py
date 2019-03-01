@@ -38,23 +38,25 @@ def aes():
     return msg
 
 def main():
-    keys_tests = ['01 02 03 04 05', '01 02 03 04 05 06 07',
+    # RC4
+    keys_tests_rc4 = ['01 02 03 04 05', '01 02 03 04 05 06 07',
     '01 02 03 04 05 06 07 08', '01 02 03 04 05 06 07 08 09 0a',
     '01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f 10',
     '01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f 10 11 12 13 14 15 16 17 18',
     '01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f 10 11 12 13 14 15 16 17 18 19 1a 1b 1c 1d 1e 1f 20']
 
-    key_sizes = [40, 56, 64, 80, 128, 192, 256]
+    key_sizes_rc4 = [40, 56, 64, 80, 128, 192, 256]
 
     print('RC4 tests')
-    for i in range(0, len(keys_tests)):
-        print('Key size: ', key_sizes[i],' bits', end=' ')
-        test_arc4(keys_tests[i])
+    for i in range(0, len(keys_tests_rc4)):
+        print('Key size: ', key_sizes_rc4[i],' bits', end=' ')
+        test_arc4(keys_tests_rc4[i])
 
+    # DES
     print('DES tests')
     test_des(b'8000000000000000')
 
-
+    # AES
     key_test_aes = ['2b 7e 15 16 28 ae d2 a6 ab f7 15 88 09 cf 4f 3c',
     '8e 73 b0 f7 da 0e 64 52 c8 10 f3 2b 80 90 79 e5 62 f8 ea d2 52 2c 6b 7b',
     '60 3d eb 10 15 ca 71 be 2b 73 ae f0 85 7d 77 81 1f 35 2c 07 3b 61 08 d7 2d 98 10 a3 09 14 df f4'
