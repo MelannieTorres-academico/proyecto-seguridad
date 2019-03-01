@@ -6,7 +6,7 @@ from Crypto.Cipher import ARC4
 from Crypto.Hash import SHA
 from Crypto.Random import get_random_bytes
 
-repetitions = 100000
+repetitions = 100
 
 # Ciphers using the RC4 algorithm
 # Params recieves a bytearray key and a bytes message
@@ -43,7 +43,7 @@ from Crypto import Random
 
 # Ciphers using the AES algorithm
 # Params a bytes key and a bytes plaintext
-# Returns the message in hexadecimal
+# Returns the message encrypted in hexadecimal
 def aes(key, plaintext):
     iv = Random.new().read(AES.block_size)
     cipher = AES.new(key, AES.MODE_CFB, iv)
@@ -57,80 +57,100 @@ from Crypto.PublicKey import RSA
 
 # Encrypts using RSA-OAEP
 # Params recieves a pulic key and a bytes message
-# Returns the message ciphered in bytes
+# Returns the message encrypted in bits
 def rsa_oaep(key, message):
     cipher = PKCS1_OAEP.new(key)
     ciphertext = cipher.encrypt(message)
     return ciphertext
 
+from Crypto.PublicKey import RSA
+# Generates a public and a private key
+# Params int containing the size of bits
+# Returns the message encrypted in bits
+def generateKey(bits):
+    new_key = RSA.generate(bits, e=65537)
+    public_key = new_key.publickey().exportKey("PEM")
+    private_key = new_key.exportKey("PEM")
+    return private_key, public_key
+
+# https://stackoverflow.com/questions/2466401/how-to-generate-ssh-key-pairs-with-python
+# Option b
+# from Crypto.PublicKey import RSA
+# def generateKey(bits):
+#     key = RSA.generate(1024)
+#     pubkey = key.publickey()
+#     print(pubkey)
+#     return key.publickey(), key.exportKey('PEM')
+
 def main():
     # RC4
-    keys_tests_rc4 = ['01 02 03 04 05', '01 02 03 04 05 06 07',
+    messages_tests = ['01 02 03 04 05', '01 02 03 04 05 06 07',
     '01 02 03 04 05 06 07 08', '01 02 03 04 05 06 07 08 09 0a',
     '01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f 10',
     '01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f 10 11 12 13 14 15 16 17 18',
     '01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f 10 11 12 13 14 15 16 17 18 19 1a 1b 1c 1d 1e 1f 20']
 
-    key_sizes_rc4 = [40, 56, 64, 80, 128, 192, 256]
+    messages_sizes = [40, 56, 64, 80, 128, 192, 256]
 
     print('RC4 tests')
-    for i in range(0, len(keys_tests_rc4)):
-        print('Key size: ', key_sizes_rc4[i],' bits', end=' ')
-        test_arc4(keys_tests_rc4[i])
+    for i in range(0, len(messages_tests)):
+        print('Message size: ', messages_sizes[i],' bits', end=' ')
+        test_arc4(messages_tests[i])
 
     # DES
     print('DES tests')
-    test_des(b'8000000000000000')
+    for i in range(0, len(messages_tests)):
+        print('Message size: ', messages_sizes[i],' bits', end=' ')
+        test_des(messages_tests[i])
 
-    # AES
-    key_test_aes = ['2b 7e 15 16 28 ae d2 a6 ab f7 15 88 09 cf 4f 3c',
-    '8e 73 b0 f7 da 0e 64 52 c8 10 f3 2b 80 90 79 e5 62 f8 ea d2 52 2c 6b 7b',
-    '60 3d eb 10 15 ca 71 be 2b 73 ae f0 85 7d 77 81 1f 35 2c 07 3b 61 08 d7 2d 98 10 a3 09 14 df f4'
-    ]
-    key_sizes_aes = [128, 192, 256]
 
     print('AES test')
-    for i in range (len(key_test_aes)):
-        print('Key size: ', key_sizes_aes[i],' bits', end=' ')
-        test_aes(key_test_aes[i])
+    for i in range (len(messages_tests)):
+        print('Message size: ', messages_sizes[i],' bits', end=' ')
+        test_aes(messages_tests[i])
 
 
     print('RSA-OAEP test')
-    test_rsa_oaep()
+    for i in range (len(messages_tests)):
+        print('Message size: ', messages_sizes[i],' bits', end=' ')
+        test_rsa_oaep(messages_tests[i])
 
 
-
-
-def test_arc4(key_string):
-    key = bytearray.fromhex(key_string)
+def test_arc4(message):
+    key = bytearray.fromhex('01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f 10 11 12 13 14 15 16 17 18 19 1a 1b 1c 1d 1e 1f 20')
     start_time = time()
     for i in range(repetitions):
-        result = arc4(key,  b'0')
+        result = arc4(key,  message)
     elapsed_time = (time() - start_time)/repetitions
+    print('Key size: 256 bits', end=' ')
     print("Elapsed time: %.10f seconds." % elapsed_time)
 
 
-def test_des(key):
+def test_des(message):
     start_time = time()
+    key = b'8000000000000000'
     for i in range(repetitions):
-        result = arc4(key,  b'0000000000000000')
+        result = arc4(key,  message)
     elapsed_time = (time() - start_time)/repetitions
     print('Key size: 64 bits', end=' ')
     print("Elapsed time: %.10f seconds." % elapsed_time)
 
 
-def test_aes(key_string):
-    key = bytes.fromhex(key_string)
+# solo un tamaño de llave, cambiar longitud de mensaje
+def test_aes(message):
+    key = bytes.fromhex('60 3d eb 10 15 ca 71 be 2b 73 ae f0 85 7d 77 81 1f 35 2c 07 3b 61 08 d7 2d 98 10 a3 09 14 df f4')
     start_time = time()
     for i in range(repetitions):
-        result = aes(key, b'6bc1bee22e409f96e93d7e117393172a')
+        result = aes(key, message)
     elapsed_time = (time() - start_time)/repetitions
+    print('Key size: 256 bits', end=' ')
     print("Elapsed time: %.10f seconds." % elapsed_time)
 
-def test_rsa_oaep():
+def test_rsa_oaep(message):
     start_time = time()
-    message = b'You can attack now!'
-    key = RSA.importKey(open('public_key.pem').read())
+    message = bytes.fromhex(message)
+    private, key = generateKey(1024)
+    key = RSA.importKey(key)
     for i in range(repetitions):
         result = rsa_oaep(key, message)
     elapsed_time = (time() - start_time)/repetitions
