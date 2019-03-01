@@ -5,6 +5,12 @@ from time import time
 from Crypto.Cipher import ARC4
 from Crypto.Hash import SHA
 from Crypto.Random import get_random_bytes
+
+repetitions = 100000
+
+# Ciphers using the RC4 algorithm
+# Params recieves a bytearray key and a bytes message
+# Returns the message encrypted in hexadecimal
 def arc4(key, message):
     nonce = get_random_bytes(16)
     tempkey = SHA.new(key+nonce).digest()
@@ -19,6 +25,9 @@ def arc4(key, message):
 from Crypto.Cipher import DES3
 from Crypto import Random
 
+# Ciphers using the DES algorithm
+# Recieves a hexadecimal key and a bytes plaintext
+# Returns the message encrypted in hexadecimal
 def des(key, plaintext):
     iv = Random.new().read(DES3.block_size)
     cipher = DES3.new(key, DES3.MODE_OFB, iv)
@@ -31,6 +40,10 @@ def des(key, plaintext):
 #https://www.dlitz.net/software/pycrypto/api/current/Crypto.Cipher.AES-module.html
 from Crypto.Cipher import AES
 from Crypto import Random
+
+# Ciphers using the AES algorithm
+# Params a bytes key and a bytes plaintext
+# Returns the message in hexadecimal
 def aes(key, plaintext):
     iv = Random.new().read(AES.block_size)
     cipher = AES.new(key, AES.MODE_CFB, iv)
@@ -42,6 +55,9 @@ def aes(key, plaintext):
 from Crypto.Cipher import PKCS1_OAEP
 from Crypto.PublicKey import RSA
 
+# Encrypts using RSA-OAEP
+# Params recieves a pulic key and a bytes message
+# Returns the message ciphered in bytes
 def rsa_oaep(key, message):
     cipher = PKCS1_OAEP.new(key)
     ciphertext = cipher.encrypt(message)
@@ -88,17 +104,17 @@ def main():
 def test_arc4(key_string):
     key = bytearray.fromhex(key_string)
     start_time = time()
-    for i in range(1000):
+    for i in range(repetitions):
         result = arc4(key,  b'0')
-    elapsed_time = (time() - start_time)/1000
+    elapsed_time = (time() - start_time)/repetitions
     print("Elapsed time: %.10f seconds." % elapsed_time)
 
 
 def test_des(key):
     start_time = time()
-    for i in range(1000):
+    for i in range(repetitions):
         result = arc4(key,  b'0000000000000000')
-    elapsed_time = (time() - start_time)/1000
+    elapsed_time = (time() - start_time)/repetitions
     print('Key size: 64 bits', end=' ')
     print("Elapsed time: %.10f seconds." % elapsed_time)
 
@@ -106,18 +122,18 @@ def test_des(key):
 def test_aes(key_string):
     key = bytes.fromhex(key_string)
     start_time = time()
-    for i in range(1000):
+    for i in range(repetitions):
         result = aes(key, b'6bc1bee22e409f96e93d7e117393172a')
-    elapsed_time = (time() - start_time)/1000
+    elapsed_time = (time() - start_time)/repetitions
     print("Elapsed time: %.10f seconds." % elapsed_time)
 
 def test_rsa_oaep():
     start_time = time()
     message = b'You can attack now!'
     key = RSA.importKey(open('public_key.pem').read())
-    for i in range(1000):
+    for i in range(repetitions):
         result = rsa_oaep(key, message)
-    elapsed_time = (time() - start_time)/1000
+    elapsed_time = (time() - start_time)/repetitions
     print("Key size: 1024 bits", end=' ')
     print("Elapsed time: %.10f seconds." % elapsed_time)
 
