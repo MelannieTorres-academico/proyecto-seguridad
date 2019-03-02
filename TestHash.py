@@ -15,44 +15,76 @@ def Message():
     St2=[]
     for num in range(128):
         St2.append('0' * num) 
-    message = St1 + St2
-    return message
+    return St1, St2
     
 def timer():
-    mssg = Message()
-    
+    Test1,Test2 = Message()
+    #Test1
     #MD5
     #https://www.cosic.esat.kuleuven.be/nessie/testvectors/hash/md5/Md5-128.unverified.test-vectors
     start_time = time()
     for i in range(10000): #Numer of iterations
-        for pos in mssg:
+        for pos in Test1:
             hashlib.md5(pos.encode('utf-8'))
             
     elapsed_time = (time() - start_time)/10000
-    print("\n" + "Elapsed time for MD5 Algorithm: %.10f seconds." % elapsed_time)
+    print("\n" + "Elapsed time for MD5 Algorithm Test1: %.10f seconds." % elapsed_time)
     
     #SHA1
     #https://www.cosic.esat.kuleuven.be/nessie/testvectors/hash/sha/Sha-1-160.test-vectors
     start_time = time()
     for i in range(10000):
         
-        for pos in mssg:
+        for pos in Test1:
             hashlib.sha1(pos.encode('utf-8'))
             
     elapsed_time = (time() - start_time)/10000
-    print("\n" + "Elapsed time for SHA-1 Algorithm: %.10f seconds." % elapsed_time)
+    print("\n" + "Elapsed time for SHA-1 Algorithm Test1: %.10f seconds." % elapsed_time)
     
     #SHA2
     #https://www.cosic.esat.kuleuven.be/nessie/testvectors/hash/sha/Sha-2-256.unverified.test-vectors
     start_time = time()
     for i in range(10000):
         
-        for pos in mssg:
+        for pos in Test1:
             hashlib.sha256(pos.encode('utf-8'))
             
     elapsed_time = (time() - start_time)/10000
-    print("\n" + "Elapsed time for SHA-2 Algorithm: %.10f seconds." % elapsed_time)
+    print("\n" + "Elapsed time for SHA-2 Algorithm Test1: %.10f seconds." % elapsed_time)
     
+    
+    #Test2
+    #MD5
+    #https://www.cosic.esat.kuleuven.be/nessie/testvectors/hash/md5/Md5-128.unverified.test-vectors
+    start_time = time()
+    for i in range(10000): #Numer of iterations
+        for pos in Test2:
+            hashlib.md5(pos.encode('utf-8'))
+            
+    elapsed_time = (time() - start_time)/10000
+    print("\n" + "Elapsed time for MD5 Algorithm Test2: %.10f seconds." % elapsed_time)
+    
+    #SHA1
+    #https://www.cosic.esat.kuleuven.be/nessie/testvectors/hash/sha/Sha-1-160.test-vectors
+    start_time = time()
+    for i in range(10000):
+        
+        for pos in Test2:
+            hashlib.sha1(pos.encode('utf-8'))
+            
+    elapsed_time = (time() - start_time)/10000
+    print("\n" + "Elapsed time for SHA-1 Algorithm Test2: %.10f seconds." % elapsed_time)
+    
+    #SHA2
+    #https://www.cosic.esat.kuleuven.be/nessie/testvectors/hash/sha/Sha-2-256.unverified.test-vectors
+    start_time = time()
+    for i in range(10000):
+        
+        for pos in Test2:
+            hashlib.sha256(pos.encode('utf-8'))
+            
+    elapsed_time = (time() - start_time)/10000
+    print("\n" + "Elapsed time for SHA-2 Algorithm Test2: %.10f seconds." % elapsed_time)
 
 def main():
    timer()
