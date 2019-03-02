@@ -5,12 +5,6 @@ from time import time
 
 repetitions = 100
 
-def toHex(A):
-    newA = []
-    for i in range(len(A)):
-        newA.append('{:02x}'.format(A[i]))
-    return ''.join(newA).upper()
-
 # RC4
 # https://pycryptodome.readthedocs.io/en/latest/src/cipher/arc4.html
 
