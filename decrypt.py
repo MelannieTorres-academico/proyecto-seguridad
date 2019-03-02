@@ -5,6 +5,12 @@ from time import time
 
 repetitions = 100
 
+def toHex(A):
+    newA = []
+    for i in range(len(A)):
+        newA.append('{:02x}'.format(A[i]))
+    return ''.join(newA).upper()
+
 # RC4
 # https://pycryptodome.readthedocs.io/en/latest/src/cipher/arc4.html
 
@@ -140,12 +146,9 @@ def test_rsa_oaep(message):
     private, key = generateKey(1024)
     key = RSA.importKey(key)
     result = rsa_oaep(key, message)
-    print(result)
-    binary_string = binascii.unhexlify(result)
-    print(Bits)
     start_time = time()
     for i in range(repetitions):
-        enc = rsa_oaep_dec(private, binary_string)
+        enc = rsa_oaep_dec(private, result)
     elapsed_time = (time() - start_time)/repetitions
     print("Key size: 1024 bits", end=' ')
     print("Elapsed time: %.10f seconds." % elapsed_time)
