@@ -38,10 +38,15 @@ def aes(key, plaintext):
     msg = iv + cipher.decrypt(plaintext)
     return msg
 
+
 #RSA-­OAEP
 # https://pycryptodome.readthedocs.io/en/latest/src/cipher/oaep.html
 from Crypto.Cipher import PKCS1_OAEP
 from Crypto.PublicKey import RSA
+
+# Encrypts using RSA-OAEP
+# Params recieves a pulic key and a bytes message
+# Returns the message encrypted in bits
 def rsa_oaep(key, message):
     cipher = PKCS1_OAEP.new(key)
     ciphertext = cipher.encrypt(message)
@@ -49,10 +54,9 @@ def rsa_oaep(key, message):
 
 def rsa_oaep_dec(key, message):
     cipher = PKCS1_OAEP.new(key)
-    plaintext = cipher.decrypt(message)
-    return plaintext
+    ciphertext = cipher.decrypt(message)
+    return ciphertext
 
-from Crypto.PublicKey import RSA
 # Generates a public and a private key
 # Params int containing the size of bits
 # Returns the message encrypted in bits
@@ -127,14 +131,21 @@ def test_aes(message):
     print('Key size: 256 bits', end=' ')
     print("Elapsed time: %.10f seconds." % elapsed_time)
 
+import numpy
+import binascii
+
+
 def test_rsa_oaep(message):
-    start_time = time()
     message = bytes.fromhex(message)
     private, key = generateKey(1024)
     key = RSA.importKey(key)
-    enc = rsa_oaep(key, message)
+    result = rsa_oaep(key, message)
+    print(result)
+    binary_string = binascii.unhexlify(result)
+    print(Bits)
+    start_time = time()
     for i in range(repetitions):
-        result = rsa_oaep_dec(private, enc)
+        enc = rsa_oaep_dec(private, binary_string)
     elapsed_time = (time() - start_time)/repetitions
     print("Key size: 1024 bits", end=' ')
     print("Elapsed time: %.10f seconds." % elapsed_time)
