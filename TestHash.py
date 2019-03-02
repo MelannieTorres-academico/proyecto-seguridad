@@ -89,8 +89,7 @@ def timer():
 def main():
    timer()
     
-    
-    
+
 
 if __name__ == "__main__":
     main()
