@@ -3,7 +3,7 @@ from Crypto.Hash import SHA
 from Crypto.Random import get_random_bytes
 from time import time
 
-repetitions = 100
+repetitions = 10000
 
 # RC4
 # https://pycryptodome.readthedocs.io/en/latest/src/cipher/arc4.html

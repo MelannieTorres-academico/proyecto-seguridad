@@ -6,7 +6,7 @@ from Crypto.Cipher import ARC4
 from Crypto.Hash import SHA
 from Crypto.Random import get_random_bytes
 
-repetitions = 100
+repetitions = 10000
 
 # Ciphers using the RC4 algorithm
 # Params recieves a bytearray key and a bytes message

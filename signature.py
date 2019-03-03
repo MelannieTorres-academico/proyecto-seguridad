@@ -1,5 +1,5 @@
 from time import time
-repetitions = 100
+repetitions = 10000
 
 #rsa pss
 from Crypto.Signature import PKCS1_PSS
